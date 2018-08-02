@@ -24,10 +24,10 @@ let conString = 'postgres://postgres:@localhost:5432/kilovolt';
 // DONE: Our pg module has a Client constructor that accepts one argument: the conString we just defined.
 // This is how it knows the URL and, for Windows and Linux users, our username and password for our database when client.connect() is called below. Thus, we need to pass our conString into our pg.Client() call.
 
-const client = new pg.Client();
+const client = new pg.Client(conString);
 
 // REVIEW: Use the client object to connect to our DB.
-client.connect(conString);
+client.connect();
 
 
 // REVIEW: Install the middleware plugins so that our app can parse the request body
@@ -39,7 +39,7 @@ app.use(express.static('./public'));
 // REVIEW: Routes for requesting HTML resources
 app.get('/new-article', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js, if any, is interacting with this particular piece of `server.js`? What part of CRUD, if any, is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // The response.sendFile corresponds to the #5 in the full-stack-diagram.png. No methods of article.js are interacting with this particular piece of server.js. This part refers to a REST api more than CRUD, however it could be considered a READ part of CRUD. 
   response.sendFile('new.html', {root: './public'});
 });
 
@@ -47,10 +47,10 @@ app.get('/new-article', (request, response) => {
 // REVIEW: Routes for making API calls to use CRUD Operations on our database
 app.get('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // The following line of code represents #3 in the full-stack-diagram.png. The fetchAll() method is interatcting with this piece of server.js. This particular piece of code is enacting the READ part of CRUD.
 
-  // TODO: Build query string here
-  client.query('')
+  // DONE: Build query string here
+  client.query('SELECT * FROM articles;')
     .then(function(result) {
       response.send(result.rows);
     })
@@ -61,7 +61,7 @@ app.get('/articles', (request, response) => {
 
 app.post('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // The following line of code corresponds to #3 in the full-stack-diagram.png. Article.prototype.insertRecord() is interacting with this particular piece of server.js. This represents the CREATE part of CRUD.
   let SQL = `
     INSERT INTO articles(title, author, author_url, category, published_on, body)
     VALUES ($1, $2, $3, $4, $5, $6);
