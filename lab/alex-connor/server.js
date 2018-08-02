@@ -87,11 +87,26 @@ app.post('/articles', (request, response) => {
 
 app.put('/articles/:id', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This refers to step 3 in the full-stack diagram or rather it will when it gets used.  It will be using the updateRecord method from article.js. It will be enacting the U part of CRUD for update.
 
   // TODO: Build query string here
-  let SQL = '';
-  let values = [];
+  let SQL = `UPDATE articles
+              SET
+                title = $1,
+                author = $2,
+                author_url = $3,
+                category = $4,
+                published_on = $5,
+                body = $6
+              WHERE article_id = $7;`;
+  let values = [request.body.title,
+                request.body.author,
+                request.body.author_url,
+                request.body.category,
+                request.body.published_on,
+                request.body,
+                request.params.id
+  ];
 
   client.query( SQL, values )
     .then(() => {
@@ -104,7 +119,7 @@ app.put('/articles/:id', (request, response) => {
 
 app.delete('/articles/:id', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This refers to step 3 in the full-stack diagram or rather it will when it gets used.  It will be using the deleteRecord method from article.js. It will be enacting the D part of CRUD for delete.
 
   let SQL = `DELETE FROM articles WHERE article_id=$1;`;
   let values = [request.params.id];
@@ -120,10 +135,10 @@ app.delete('/articles/:id', (request, response) => {
 
 app.delete('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This refers to step 3 in the full-stack diagram or rather it will when it gets used.  It will be using the truncateTable method from article.js. It will be enacting the D part of CRUD for delete, but this time the whole table.
 
   // TODO: Build query string here
-  let SQL = '';
+  let SQL = 'DELETE * FROM articles';
   client.query( SQL )
     .then(() => {
       response.send('Delete complete')
@@ -134,7 +149,7 @@ app.delete('/articles', (request, response) => {
 });
 
 // COMMENT: What is this function invocation doing?
-// PUT YOUR RESPONSE HERE
+// It is creating the database table if it does not exist with the table headers and data types.
 loadDB();
 
 app.listen(PORT, () => {
@@ -146,7 +161,7 @@ app.listen(PORT, () => {
 ////////////////////////////////////////
 function loadArticles() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This refers to step 3 in the full-stack diagram or rather it will when it gets used.  It will not talk to article.js. It will be enacting the R part of CRUD for read.
 
   let SQL = 'SELECT COUNT(*) FROM articles';
   client.query( SQL )
@@ -171,7 +186,7 @@ function loadArticles() {
 
 function loadDB() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This refers to step 3 in the full-stack diagram or rather it will when it gets used.  This will not use article.js. It will be enacting the C part of CRUD for create.
   client.query(`
     CREATE TABLE IF NOT EXISTS articles (
       article_id SERIAL PRIMARY KEY,
