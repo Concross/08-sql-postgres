@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 // DONE: Complete the connection string (conString) for the URL that will connect to your local PostgreSQL database.
-let conString = 'postgres://postgres:@localhost:5432/kilovolt';
+let conString = 'postgres://ccross:12345@localhost:5432/kilovolt';
 
 
 
@@ -89,24 +89,24 @@ app.put('/articles/:id', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
   // This refers to step 3 in the full-stack diagram or rather it will when it gets used.  It will be using the updateRecord method from article.js. It will be enacting the U part of CRUD for update.
 
-  // TODO: Build query string here
+  // DONE: Build query string here
   let SQL = `UPDATE articles
               SET
-                title = $1,
-                author = $2,
-                author_url = $3,
-                category = $4,
-                published_on = $5,
-                body = $6
-              WHERE article_id = $7;`;
+                title=$1,
+                author=$2,
+                author_url=$3,
+                category=$4,
+                published_on=$5,
+                body =$6
+              WHERE article_id =$7;`;
   let values = [request.body.title,
                 request.body.author,
                 request.body.author_url,
                 request.body.category,
                 request.body.published_on,
-                request.body,
+                request.body.body,
                 request.params.id
-  ];
+  ]
 
   client.query( SQL, values )
     .then(() => {
@@ -137,8 +137,8 @@ app.delete('/articles', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to the following line of code? Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
   // This refers to step 3 in the full-stack diagram or rather it will when it gets used.  It will be using the truncateTable method from article.js. It will be enacting the D part of CRUD for delete, but this time the whole table.
 
-  // TODO: Build query string here
-  let SQL = 'DELETE * FROM articles';
+  // DONE: Build query string here
+  let SQL = 'DELETE FROM articles';
   client.query( SQL )
     .then(() => {
       response.send('Delete complete')
